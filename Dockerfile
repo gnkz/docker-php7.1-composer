@@ -1,4 +1,4 @@
-FROM gnkz/php7.1-cli-alpine:0.1.1
+FROM gnkz/php7.1-cli-alpine:0.1.2
 
 ENV COMPOSER_VERSION 1.4.2
 
