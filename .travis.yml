@@ -1,0 +1,26 @@
+sudo: required
+services:
+- docker
+branches:
+  except:
+  - develop
+  - "/^feature\\/.*$/"
+  - "/^release\\/.*$/"
+  - "/^support\\/.*$/"
+  - "/^hotfix\\/.*$/"
+env:
+  global:
+  - COMMIT: "${TRAVIS_COMMIT::8}"
+  - DOCKER_REPO: gnkz/docker-composer
+  - CGO_ENABLED: 0
+  - GOOS: linux
+  - GOARCH: amd64
+  - secure: zct4aYuj/ytfdPpdDqHIjxL5UNVTr7godfbnqWvMwtXcPvRHIeoVYKYz7jq1Yz6iS2oyWRWcury57nxg7Ecd4tDWEAZl363M4PYqb9cKekoonpiu2lJaudOcyTypTVkSSL3y6c/SKFvccbDLCq2VjkvwtMUFH/xUt/jhT92rf0oMvYbCllEtZXS/9EHsiTMzuVKzx1o4ygpeOkgsg2lmmEhY3VSJUbTZZh1WBZcM8II/AjA4IpTIVFRpZbkvfHQA7SJd/4+QEvRTS+iVeXaVr5fHirlKo1sCs6Z/Y+ij1VKsEdfVQxf91GREyxtaEY6r7P3zMf4pb7wtqhxVDwveYWshyWg8NVGErQt+kiT8rY6f6aWRwCOGC0LF/ZuSPPJb+JgapcNhoALuJsaeSiKYhpdpWOA9YtI/pIcdTQ/wjKkvE1vZA4N1OVmECwQ6asc3K6msapFCiI3ApzHyWJt7Hx9XWxCfH5pVnxyZYXzQxcBTpyxTJuMn2VJBq8zAizvE68TsZnvtY3Z7ruGrqHtOFVb4SkNQ26jXX1G8RNvFppkssIbTfGqeNiXIpz3WOQqs8rqIRv5sEjjQzP9kloY1/hyFAp63QbpZPnJnyt9HgJSSKtz0yKzFsQHGCMsVy1Tqd2krraHmaYbLE8SCpZA8ZpZCurWsMmeoBis8vgqP5s4=
+script:
+- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH;
+  fi`
+- docker build -t $DOCKER_REPO:$COMMIT -f Dockerfile .
+after_success:
+- docker login -u gnkz -p $DOCKER_PASS
+- docker tag $DOCKER_REPO:$COMMIT $DOCKER_REPO:$TAG
+- docker push $DOCKER_REPO
