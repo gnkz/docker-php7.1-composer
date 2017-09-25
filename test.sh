@@ -4,4 +4,4 @@ DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi                                               
 . "$DIR/build.sh"
 
-docker run -it --rm $USERNAME/$REPONAME:$TAG --version | grep 1.4.2
+docker run -it --rm $USERNAME/$REPONAME:$TAG --version | grep 1.5.2
